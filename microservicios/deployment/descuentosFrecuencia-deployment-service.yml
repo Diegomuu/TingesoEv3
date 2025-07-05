@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: descuentos-frecuencia-deployment
+  labels:
+    app: descuentos-frecuencia-deployment
+spec:
+  selector:
+    matchLabels:
+      app: descuentos-frecuencia-deployment
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: descuentos-frecuencia-deployment
+    spec:
+      containers:
+        - name: descuentos-frecuencia-service
+          image: diegomuu/descuentos-frecuencia-service
+          ports:
+            - name: http-port
+              containerPort: 8080
+          env:
+            - name: SERVER_PORT
+              value: "8080"
+            - name: SPRING_CLOUD_CONFIG_URI
+              value: http://config-server-service:8888
+            - name: SPRING_CLOUD_CONFIG_FAIL_FAST
+              value: "true"
+            - name: SPRING_DATASOURCE_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: database-configmap
+                  key: descuentos-frecuencia-db-url
+            - name: SPRING_DATASOURCE_USERNAME
+              value: root
+            - name: SPRING_DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: database-secret
+                  key: database-password
+            - name: SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT
+              value: org.hibernate.dialect.MySQL8Dialect
+            - name: SPRING_JPA_HIBERNATE_DDL_AUTO
+              value: update
+            - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
+              value: http://eureka-service:8761/eureka/
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: descuentos-frecuencia-service
+  labels:
+    app: descuentos-frecuencia-service
+spec:
+  selector:
+    app: descuentos-frecuencia-deployment
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: http-port
+  type: LoadBalancer

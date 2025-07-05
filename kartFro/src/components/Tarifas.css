@@ -1,0 +1,176 @@
+.tarifas-container {
+  min-height: 100vh;
+  background: var(--background-dark);
+}
+
+.tarifas-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.tarifas-content h1 {
+  color: var(--primary-color);
+  text-align: center;
+  margin-bottom: 2rem;
+  font-size: 2.5rem;
+}
+
+.info-section {
+  background: var(--text-light);
+  padding: 2rem;
+  border-radius: 15px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  margin-bottom: 2rem;
+}
+
+.info-section p {
+  font-size: 1.2rem;
+  color: var(--text-dark);
+  margin-bottom: 1rem;
+}
+
+.vueltas-selector {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.vueltas-selector label {
+  font-weight: 500;
+  color: var(--text-dark);
+}
+
+.vueltas-selector select {
+  padding: 0.5rem 1rem;
+  border: 2px solid var(--primary-color);
+  border-radius: 8px;
+  font-size: 1rem;
+  background-color: var(--text-light);
+  color: var(--text-dark);
+  cursor: pointer;
+}
+
+.btn-calcular {
+  padding: 0.5rem 1.5rem;
+  background: var(--primary-color);
+  color: var(--text-light);
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-calcular:hover {
+  background: var(--primary-dark);
+  transform: translateY(-2px);
+}
+
+.btn-calcular:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.error-message {
+  background: #fee;
+  color: #e74c3c;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.tarifas-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.tarifa-card {
+  background: var(--text-light);
+  padding: 1.5rem;
+  border-radius: 15px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+}
+
+.tarifa-card:hover {
+  transform: translateY(-5px);
+}
+
+.tarifa-card h3 {
+  color: var(--primary-color);
+  margin-bottom: 1rem;
+  font-size: 1.3rem;
+}
+
+.tarifa-details {
+  color: var(--text-dark);
+}
+
+.tarifa-details .monto {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--accent-color);
+  margin-bottom: 0.5rem;
+}
+
+.tarifa-details .detalles {
+  font-size: 0.9rem;
+  color: var(--text-dark);
+  opacity: 0.8;
+}
+
+.total-section {
+  background: var(--text-light);
+  padding: 2rem;
+  border-radius: 15px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  margin-top: 2rem;
+}
+
+.total-section h2 {
+  color: var(--primary-color);
+  margin-bottom: 1.5rem;
+}
+
+.btn-pagar {
+  padding: 1rem 3rem;
+  font-size: 1.2rem;
+  background: linear-gradient(135deg, var(--accent-color), var(--primary-color));
+  color: var(--text-light);
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 600;
+}
+
+.btn-pagar:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 180, 216, 0.2);
+}
+
+@media (max-width: 768px) {
+  .tarifas-content {
+    padding: 1rem;
+  }
+
+  .vueltas-selector {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .vueltas-selector select,
+  .btn-calcular {
+    width: 100%;
+  }
+
+  .tarifa-card {
+    padding: 1rem;
+  }
+} 

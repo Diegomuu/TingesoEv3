@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql-descuentos-grupo
+  labels:
+    app: mysql-descuentos-grupo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mysql-descuentos-grupo
+  template:
+    metadata:
+      labels:
+        app: mysql-descuentos-grupo
+    spec:
+      containers:
+        - name: mysql-descuentos-grupo
+          image: mysql:8.0
+          ports:
+            - containerPort: 3306
+          env:
+            - name: MYSQL_DATABASE
+              value: descuentosgrupodb
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: database-secret
+                  key: database-password
+          volumeMounts:
+            - name: mysql-descuentos-grupo-data
+              mountPath: /var/lib/mysql
+      volumes:
+        - name: mysql-descuentos-grupo-data
+          emptyDir: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql-descuentos-grupo
+  labels:
+    app: mysql-descuentos-grupo
+spec:
+  selector:
+    app: mysql-descuentos-grupo
+  ports:
+    - protocol: TCP
+      port: 3306
+      targetPort: 3306
+  type: ClusterIP 

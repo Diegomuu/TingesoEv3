@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql-tarifas-festivos
+  labels:
+    app: mysql-tarifas-festivos
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mysql-tarifas-festivos
+  template:
+    metadata:
+      labels:
+        app: mysql-tarifas-festivos
+    spec:
+      containers:
+        - name: mysql-tarifas-festivos
+          image: mysql:8.0
+          ports:
+            - containerPort: 3306
+          env:
+            - name: MYSQL_DATABASE
+              value: tarifasfestivosdb
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: database-secret
+                  key: database-password
+          volumeMounts:
+            - name: mysql-tarifas-festivos-data
+              mountPath: /var/lib/mysql
+      volumes:
+        - name: mysql-tarifas-festivos-data
+          emptyDir: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql-tarifas-festivos
+  labels:
+    app: mysql-tarifas-festivos
+spec:
+  selector:
+    app: mysql-tarifas-festivos
+  ports:
+    - protocol: TCP
+      port: 3306
+      targetPort: 3306
+  type: ClusterIP 

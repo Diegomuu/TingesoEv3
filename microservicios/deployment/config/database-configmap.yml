@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: database-configmap
+data:
+  # Clientes Database
+  clientes-db-url: jdbc:mysql://mysql-clientes:3306/clientesdb?allowPublicKeyRetrieval=true&useSSL=false
+  # Reservas Database
+  reservas-db-url: jdbc:mysql://mysql-reservas:3306/reservasdb?allowPublicKeyRetrieval=true&useSSL=false
+  # Rack Database
+  rack-db-url: jdbc:mysql://mysql-rack:3306/rackdb?allowPublicKeyRetrieval=true&useSSL=false
+  # Tarifas Database
+  tarifas-db-url: jdbc:mysql://mysql-tarifas:3306/tarifasdb?allowPublicKeyRetrieval=true&useSSL=false
+  # TarifasFestivos Database
+  tarifas-festivos-db-url: jdbc:mysql://mysql-tarifas-festivos:3306/tarifasfestivosdb?allowPublicKeyRetrieval=true&useSSL=false
+  # DescuentosFrecuencia Database
+  descuentos-frecuencia-db-url: jdbc:mysql://mysql-descuentos-frecuencia:3306/descuentosfrecuenciadb?allowPublicKeyRetrieval=true&useSSL=false
+  # DescuentosGrupo Database
+  descuentos-grupo-db-url: jdbc:mysql://mysql-descuentos-grupo:3306/descuentosgrupodb?allowPublicKeyRetrieval=true&useSSL=false 

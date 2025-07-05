@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql-reservas
+  labels:
+    app: mysql-reservas
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mysql-reservas
+  template:
+    metadata:
+      labels:
+        app: mysql-reservas
+    spec:
+      containers:
+        - name: mysql-reservas
+          image: mysql:8.0
+          ports:
+            - containerPort: 3306
+          env:
+            - name: MYSQL_DATABASE
+              value: reservasdb
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: database-secret
+                  key: database-password
+          volumeMounts:
+            - name: mysql-reservas-data
+              mountPath: /var/lib/mysql
+      volumes:
+        - name: mysql-reservas-data
+          emptyDir: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql-reservas
+  labels:
+    app: mysql-reservas
+spec:
+  selector:
+    app: mysql-reservas
+  ports:
+    - protocol: TCP
+      port: 3306
+      targetPort: 3306
+  type: ClusterIP 

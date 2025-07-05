@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql-descuentos-frecuencia
+  labels:
+    app: mysql-descuentos-frecuencia
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mysql-descuentos-frecuencia
+  template:
+    metadata:
+      labels:
+        app: mysql-descuentos-frecuencia
+    spec:
+      containers:
+        - name: mysql-descuentos-frecuencia
+          image: mysql:8.0
+          ports:
+            - containerPort: 3306
+          env:
+            - name: MYSQL_DATABASE
+              value: descuentosfrecuenciadb
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: database-secret
+                  key: database-password
+          volumeMounts:
+            - name: mysql-descuentos-frecuencia-data
+              mountPath: /var/lib/mysql
+      volumes:
+        - name: mysql-descuentos-frecuencia-data
+          emptyDir: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql-descuentos-frecuencia
+  labels:
+    app: mysql-descuentos-frecuencia
+spec:
+  selector:
+    app: mysql-descuentos-frecuencia
+  ports:
+    - protocol: TCP
+      port: 3306
+      targetPort: 3306
+  type: ClusterIP 

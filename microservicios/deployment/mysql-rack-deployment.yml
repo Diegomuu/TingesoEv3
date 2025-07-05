@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql-rack
+  labels:
+    app: mysql-rack
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mysql-rack
+  template:
+    metadata:
+      labels:
+        app: mysql-rack
+    spec:
+      containers:
+        - name: mysql-rack
+          image: mysql:8.0
+          ports:
+            - containerPort: 3306
+          env:
+            - name: MYSQL_DATABASE
+              value: rackdb
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: database-secret
+                  key: database-password
+          volumeMounts:
+            - name: mysql-rack-data
+              mountPath: /var/lib/mysql
+      volumes:
+        - name: mysql-rack-data
+          emptyDir: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql-rack
+  labels:
+    app: mysql-rack
+spec:
+  selector:
+    app: mysql-rack
+  ports:
+    - protocol: TCP
+      port: 3306
+      targetPort: 3306
+  type: ClusterIP 

@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql-clientes
+  labels:
+    app: mysql-clientes
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mysql-clientes
+  template:
+    metadata:
+      labels:
+        app: mysql-clientes
+    spec:
+      containers:
+        - name: mysql-clientes
+          image: mysql:8.0
+          ports:
+            - containerPort: 3306
+          env:
+            - name: MYSQL_DATABASE
+              value: clientesdb
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: database-secret
+                  key: database-password
+          volumeMounts:
+            - name: mysql-clientes-data
+              mountPath: /var/lib/mysql
+      volumes:
+        - name: mysql-clientes-data
+          emptyDir: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql-clientes
+  labels:
+    app: mysql-clientes
+spec:
+  selector:
+    app: mysql-clientes
+  ports:
+    - protocol: TCP
+      port: 3306
+      targetPort: 3306
+  type: ClusterIP 

@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql-tarifas
+  labels:
+    app: mysql-tarifas
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mysql-tarifas
+  template:
+    metadata:
+      labels:
+        app: mysql-tarifas
+    spec:
+      containers:
+        - name: mysql-tarifas
+          image: mysql:8.0
+          ports:
+            - containerPort: 3306
+          env:
+            - name: MYSQL_DATABASE
+              value: tarifasdb
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: database-secret
+                  key: database-password
+          volumeMounts:
+            - name: mysql-tarifas-data
+              mountPath: /var/lib/mysql
+      volumes:
+        - name: mysql-tarifas-data
+          emptyDir: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql-tarifas
+  labels:
+    app: mysql-tarifas
+spec:
+  selector:
+    app: mysql-tarifas
+  ports:
+    - protocol: TCP
+      port: 3306
+      targetPort: 3306
+  type: ClusterIP 
