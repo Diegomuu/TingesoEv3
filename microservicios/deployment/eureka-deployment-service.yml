@@ -19,13 +19,16 @@ spec:
           image: diegomuu/eureka-server
           ports:
             - containerPort: 8761
+          env:
+            - name: SPRING_CONFIG_IMPORT
+              value: "optional:configserver:http://config-server-service:8888"
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: eureka-service
+  name: eureka-server
   labels:
-    app: eureka-service
+    app: eureka-server
 spec:
   selector:
     app: eureka-deployment

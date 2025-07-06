@@ -14,6 +14,17 @@ const Tarifas = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [reservaData, setReservaData] = useState(null);
+  const [fechaReserva, setFechaReserva] = useState(() => {
+    // Por defecto, hoy
+    const hoy = new Date();
+    return hoy.toISOString().split('T')[0];
+  });
+  const [horaReserva, setHoraReserva] = useState(() => {
+    // Por defecto, hora actual redondeada a la siguiente hora
+    const ahora = new Date();
+    ahora.setMinutes(0, 0, 0);
+    return ahora.toTimeString().slice(0,5);
+  });
 
   // Preparar los datos de clientes para la API
   const prepararDatosClientes = () => {
@@ -39,13 +50,12 @@ const Tarifas = () => {
     setError(null);
 
     try {
-      const fechaReserva = new Date().toISOString().split('T')[0]; // Fecha actual en formato YYYY-MM-DD
-      
+      // Usar fechaReserva seleccionada
       const payload = {
         clientes: prepararDatosClientes(),
         cantidadPersonas: cantidadPersonas,
         vueltas: vueltas,
-        fechaReserva: fechaReserva
+        fechaReserva: fechaReserva // <-- aquí
       };
 
       console.log('Enviando payload:', payload);
@@ -82,15 +92,13 @@ const Tarifas = () => {
   const crearReserva = async () => {
     try {
       const montoTotal = tarifas.reduce((total, tarifa) => total + tarifa.monto, 0);
-      const fechaReserva = new Date().toISOString().split('T')[0];
-      const horaReserva = new Date().toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
-      
+      // Usar fechaReserva y horaReserva seleccionadas
       const payload = {
         fechaReserva,
         horaReserva,
         vueltas,
         cantidadPersonas,
-        nombreReservante: clientes[0].nombre, // Usando el primer cliente como reservante
+        nombreReservante: clientes[0].nombre,
         clienteIds: clientes.map(cliente => cliente.id),
         montoTotal
       };
@@ -149,11 +157,32 @@ const Tarifas = () => {
 
   return (
     <div className="tarifas-container">
-      <Navbar /> {/* ✅ Agregamos el Navbar */}
+      <Navbar />
       <div className="tarifas-content">
         <h1>Cálculo de Tarifas</h1>
         <div className="info-section">
           <p>Cantidad de personas: {cantidadPersonas}</p>
+          <div className="fecha-hora-selector">
+            <label>
+              Fecha de la reserva:
+              <input
+                type="date"
+                value={fechaReserva}
+                onChange={e => setFechaReserva(e.target.value)}
+                min={new Date().toISOString().split('T')[0]}
+                disabled={loading}
+              />
+            </label>
+            <label>
+              Hora de la reserva:
+              <input
+                type="time"
+                value={horaReserva}
+                onChange={e => setHoraReserva(e.target.value)}
+                disabled={loading}
+              />
+            </label>
+          </div>
           <div className="vueltas-selector">
             <label htmlFor="vueltas">Número de vueltas:</label>
             <select

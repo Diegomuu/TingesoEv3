@@ -19,10 +19,10 @@ spec:
           image: diegomuu/rack-service
           ports:
             - name: http-port
-              containerPort: 8080
+              containerPort: 8094
           env:
             - name: SERVER_PORT
-              value: "8080"
+              value: "0"
             - name: SPRING_CLOUD_CONFIG_URI
               value: http://config-server-service:8888
             - name: SPRING_CLOUD_CONFIG_FAIL_FAST
@@ -44,19 +44,26 @@ spec:
             - name: SPRING_JPA_HIBERNATE_DDL_AUTO
               value: update
             - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
-              value: http://eureka-service:8761/eureka/
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: rack-service
-  labels:
-    app: rack-service
-spec:
-  selector:
-    app: rack-deployment
-  ports:
-    - protocol: TCP
-      port: 80
-      targetPort: http-port
-  type: LoadBalancer
+              value: http://eureka-server:8761/eureka/
+            - name: EUREKA_CLIENT_REGISTER_WITH_EUREKA
+              value: "true"
+            - name: EUREKA_CLIENT_FETCH_REGISTRY
+              value: "true"
+            - name: EUREKA_INSTANCE_PREFERIPADDRESS
+              value: "true"
+            - name: EUREKA_INSTANCE_HOSTNAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
+            - name: EUREKA_CLIENT_REGISTRY_FETCH_INTERVAL_SECONDS
+              value: "5"
+            - name: EUREKA_INSTANCE_LEASE_RENEWAL_INTERVAL_IN_SECONDS
+              value: "5"
+            - name: EUREKA_INSTANCE_LEASE_EXPIRATION_DURATION_IN_SECONDS
+              value: "10"
+            - name: LOGGING_LEVEL_COM_NETFLIX_DISCOVERY
+              value: "DEBUG"
+            - name: LOGGING_LEVEL_COM_NETFLIX_EUREKA
+              value: "DEBUG"
+            - name: SPRING_CLOUD_CONFIG_IMPORT_CHECK_ENABLED
+              value: "false"
